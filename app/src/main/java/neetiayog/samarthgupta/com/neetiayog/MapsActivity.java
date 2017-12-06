@@ -17,9 +17,41 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    public static String stateLists = "Andhra Pradesh, " +
+            "Arunachal Pradesh, " +
+            "Assam, " +
+            "Bihar, " +
+            "Goa, " +
+            "Gujarat, " +
+            "Haryana – Chandigarh\n" +
+            "Himachal Pradesh – Shimla\n" +
+            "Jammu & Kashmir – Srinagar (Winter : Jammu)\n" +
+            "Karnataka – Bangalooru\n" +
+            "Kerala – Thiruvananthapuram\n" +
+            "Madhya Pradesh – Bhopal\n" +
+            "Maharashtra – Mumbai\n" +
+            "Manipur – Imphal\n" +
+            "Meghalaya – Shillong\n" +
+            "Mizoram – Aizawl\n" +
+            "Nagaland – Kohima\n" +
+            "Orissa – Bhubaneswar\n" +
+            "Punjab – Chandigarh\n" +
+            "Rajasthan – Jaipur\n" +
+            "Sikkim – Gangtok\n" +
+            "Tamil Nadu – Chennai\n" +
+            "Tripura – Agartala\n" +
+            "Uttar Pradesh – Lucknow\n" +
+            "West Bengal – Kolkata\n" +
+            "Chhattisgarh – Raipur\n" +
+            "Uttarakhand – Dehradun\n" +
+            "Jharkhand – Ranchi, "+"Delhi, ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +62,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+
 
 
     /**
@@ -43,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
@@ -53,12 +88,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.latitude+","+latLng.longitude+"&key=AIzaSyBe3vMxXSq8crw9khCSoDUTiuqxv0zW51o";
+                String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.latitude+","+latLng.longitude+"&key=AIzaSyDr7gz8Cajvtk5o1W7qYRzeQOShAHbUStI";
+                String url2 = "https://raw.githubusercontent.com/samarthgupta1011/NeetiAyog/master/app/src/main/java/neetiayog/samarthgupta/com/neetiayog/data.json";
+
+                Log.d("TAGG",latLng.latitude+"  "+latLng.longitude);
                 Volley.newRequestQueue(MapsActivity.this).add(new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-                        Log.d("TAG",response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            JSONArray main = obj.getJSONArray("results").getJSONObject(0).getJSONArray("address_components");
+                            String state;
+                            for(int i =0; i<main.length();i++){
+                                if(stateLists.contains(main.getJSONObject(i).getString("long_name"))){
+                                    state = main.getJSONObject(i).getString("long_name");
+                                    Log.d("STATE",state);
+                                    break;
+
+                                }
+
+                            }
+
+
+
+//                            String state = main.getString("long_name");
+
+
+
+//                            if(stateLists.contains(state)){
+//
+//                            }
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
