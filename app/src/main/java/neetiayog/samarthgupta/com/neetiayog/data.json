@@ -1,0 +1,15 @@
+{
+  "state": "Delhi",
+  "districts" : [
+    {
+      "name": "Central Delhi",
+      "lat": 28.51,
+      "lon": 77.25
+    },
+    {
+      "name": "East Delhi",
+      "lat": 28.37,
+      "lon": 77.25
+    }
+  ]
+}
